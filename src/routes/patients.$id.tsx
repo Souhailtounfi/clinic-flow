@@ -84,14 +84,14 @@ function PatientProfile() {
               <div className="text-sm font-semibold">Medical history</div>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {patient.medicalHistory.length === 0 ? <span className="text-xs text-muted-foreground">No known conditions.</span>
-                  : patient.medicalHistory.map((c) => <Badge key={c} variant="secondary" className="rounded-full">{c}</Badge>)}
+                  : patient.medicalHistory.map((c: string) => <Badge key={c} variant="secondary" className="rounded-full">{c}</Badge>)}
               </div>
             </div>
             <div className="mt-5">
               <div className="text-sm font-semibold">Allergies</div>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {patient.allergies.length === 0 ? <span className="text-xs text-muted-foreground">None recorded.</span>
-                  : patient.allergies.map((c) => <Badge key={c} className="rounded-full bg-[oklch(0.95_0.05_27)] text-[oklch(0.45_0.18_27)] hover:bg-[oklch(0.95_0.05_27)]">{c}</Badge>)}
+                  : patient.allergies.map((c: string) => <Badge key={c} className="rounded-full bg-[oklch(0.95_0.05_27)] text-[oklch(0.45_0.18_27)] hover:bg-[oklch(0.95_0.05_27)]">{c}</Badge>)}
               </div>
             </div>
             <div className="mt-5">
