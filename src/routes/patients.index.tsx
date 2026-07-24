@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { patients } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/patients")({
+export const Route = createFileRoute("/patients/")({
   head: () => ({
     meta: [
       { title: "Patients — Medicab" },
