@@ -81,10 +81,10 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Monthly revenue</div>
-                <div className="text-xs text-muted-foreground">Last 7 months · MAD</div>
+                <div className="text-sm font-semibold">{t("dash.monthlyRevenue")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.last7")}</div>
               </div>
-              <Button variant="ghost" size="sm" className="text-xs">View report <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></Button>
+              <Button variant="ghost" size="sm" className="text-xs">{t("dash.viewReport")} <ArrowUpRight className="ms-1 h-3.5 w-3.5 rtl:rotate-180" /></Button>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -110,8 +110,8 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Attendance rate</div>
-                <div className="text-xs text-muted-foreground">Present vs absent</div>
+                <div className="text-sm font-semibold">{t("dash.attendance")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.presentVsAbsent")}</div>
               </div>
               <span className="rounded-full bg-[oklch(0.94_0.06_155)] px-2 py-0.5 text-[11px] font-medium text-[oklch(0.35_0.12_155)]">93%</span>
             </div>
@@ -136,8 +136,8 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Appointments per month</div>
-                <div className="text-xs text-muted-foreground">Volume trend</div>
+                <div className="text-sm font-semibold">{t("dash.appointmentsPerMonth")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.volumeTrend")}</div>
               </div>
             </div>
             <div className="h-52">
@@ -157,8 +157,8 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Today's notifications</div>
-              <Link to="/notifications" className="text-xs font-medium text-primary hover:underline">View all</Link>
+              <div className="text-sm font-semibold">{t("dash.todaysNotifications")}</div>
+              <Link to="/notifications" className="text-xs font-medium text-primary hover:underline">{t("dash.viewAll")}</Link>
             </div>
             <ul className="space-y-3">
               {notifications.slice(0, 4).map((n) => (
@@ -184,8 +184,8 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm lg:col-span-2">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Upcoming appointments</div>
-              <Link to="/appointments" className="text-xs font-medium text-primary hover:underline">See all</Link>
+              <div className="text-sm font-semibold">{t("dash.upcoming")}</div>
+              <Link to="/appointments" className="text-xs font-medium text-primary hover:underline">{t("dash.seeAll")}</Link>
             </div>
             <div className="divide-y">
               {upcoming.map((a) => (
@@ -209,7 +209,7 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Recent activity</div>
+              <div className="text-sm font-semibold">{t("dash.recentActivity")}</div>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </div>
             <ol className="space-y-4">
