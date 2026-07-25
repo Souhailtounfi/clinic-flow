@@ -15,28 +15,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/patients", label: "Patients", icon: Users },
-  { to: "/appointments", label: "Appointments", icon: CalendarClock },
-  { to: "/calendar", label: "Calendar", icon: CalendarDays },
-  { to: "/waiting-room", label: "Waiting Room", icon: Armchair },
-  { to: "/consultations", label: "Consultations", icon: Stethoscope },
-  { to: "/prescriptions", label: "Prescriptions", icon: Pill },
-  { to: "/payments", label: "Payments", icon: Wallet },
-  { to: "/reports", label: "Reports", icon: BarChart3 },
-  { to: "/notifications", label: "Notifications", icon: Bell },
+  { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/patients", key: "nav.patients", icon: Users },
+  { to: "/appointments", key: "nav.appointments", icon: CalendarClock },
+  { to: "/calendar", key: "nav.calendar", icon: CalendarDays },
+  { to: "/waiting-room", key: "nav.waitingRoom", icon: Armchair },
+  { to: "/consultations", key: "nav.consultations", icon: Stethoscope },
+  { to: "/prescriptions", key: "nav.prescriptions", icon: Pill },
+  { to: "/payments", key: "nav.payments", icon: Wallet },
+  { to: "/reports", key: "nav.reports", icon: BarChart3 },
+  { to: "/notifications", key: "nav.notifications", icon: Bell },
 ] as const;
 
 const adminNav = [
-  { to: "/settings", label: "Clinic Settings", icon: Settings },
-  { to: "/users", label: "Users", icon: UserCog },
-  { to: "/audit-logs", label: "Audit Logs", icon: ScrollText },
-  { to: "/admin", label: "Super Admin", icon: HeartPulse },
+  { to: "/settings", key: "nav.settings", icon: Settings },
+  { to: "/users", key: "nav.users", icon: UserCog },
+  { to: "/audit-logs", key: "nav.auditLogs", icon: ScrollText },
+  { to: "/admin", key: "nav.superAdmin", icon: HeartPulse },
 ] as const;
 
 function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-2 px-5 py-5">
@@ -45,11 +48,11 @@ function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?:
         </div>
         <div className="leading-tight">
           <div className="text-sm font-bold tracking-tight">Medicab</div>
-          <div className="text-[11px] text-muted-foreground">Clinic OS · Morocco</div>
+          <div className="text-[11px] text-muted-foreground">{t("brand.tagline")}</div>
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 pb-4">
-        <div className="px-2 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Workspace</div>
+        <div className="px-2 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("nav.workspace")}</div>
         <ul className="space-y-0.5">
           {nav.map((item) => {
             const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
@@ -66,13 +69,13 @@ function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?:
                   )}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate">{t(item.key)}</span>
                 </Link>
               </li>
             );
           })}
         </ul>
-        <div className="px-2 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Administration</div>
+        <div className="px-2 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("nav.administration")}</div>
         <ul className="space-y-0.5">
           {adminNav.map((item) => {
             const active = pathname.startsWith(item.to);
@@ -89,7 +92,7 @@ function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?:
                   )}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{item.label}</span>
+                  <span className="truncate">{t(item.key)}</span>
                 </Link>
               </li>
             );
@@ -103,9 +106,9 @@ function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?:
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-semibold">Dr. Kaoutar Idrissi</div>
-            <div className="truncate text-[11px] text-muted-foreground">Cabinet Idrissi · Doctor</div>
+            <div className="truncate text-[11px] text-muted-foreground">{t("brand.role")}</div>
           </div>
-          <Link to="/login" className="text-muted-foreground hover:text-foreground">
+          <Link to="/login" className="text-muted-foreground hover:text-foreground" aria-label={t("header.logout")}>
             <LogOut className="h-4 w-4" />
           </Link>
         </div>
@@ -119,14 +122,15 @@ export function AppShell({ children, title, subtitle, actions }: {
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [sheetOpen, setSheetOpen] = useState(false);
+  const { t, dir } = useI18n();
 
   return (
-    <div className="min-h-screen bg-background">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r lg:block">
+    <div className="min-h-screen bg-background" dir={dir}>
+      <aside className="fixed inset-y-0 start-0 z-40 hidden w-64 border-e lg:block">
         <SidebarInner pathname={pathname} />
       </aside>
 
-      <div className="lg:pl-64">
+      <div className="lg:ps-64">
         <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-md">
           <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -135,21 +139,23 @@ export function AppShell({ children, title, subtitle, actions }: {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-72 p-0">
+              <SheetContent side={dir === "rtl" ? "right" : "left"} className="w-72 p-0">
                 <SidebarInner pathname={pathname} onNavigate={() => setSheetOpen(false)} />
               </SheetContent>
             </Sheet>
 
             <div className="relative hidden max-w-md flex-1 md:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search patients, appointments, prescriptions…" className="h-10 rounded-full border-border bg-secondary/50 pl-9" />
+              <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder={t("header.search")} className="h-10 rounded-full border-border bg-secondary/50 ps-9" />
             </div>
             <div className="flex-1 md:hidden" />
+
+            <LanguageSwitcher />
 
             <Button variant="ghost" size="icon" className="relative" asChild>
               <Link to="/notifications">
                 <Bell className="h-5 w-5" />
-                <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
+                <span className="absolute end-2 top-2 h-2 w-2 rounded-full bg-primary" />
               </Link>
             </Button>
 
@@ -164,12 +170,12 @@ export function AppShell({ children, title, subtitle, actions }: {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My account</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("header.myAccount")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/settings">Clinic settings</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/users">Team</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/settings">{t("header.clinicSettings")}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/users">{t("header.team")}</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/login">Log out</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/login">{t("header.logout")}</Link></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
