@@ -12,27 +12,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { appointments, notifications, revenueByMonth, attendanceByMonth } from "@/lib/mock-data";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Medicab" },
-      { name: "description", content: "Today's clinic activity, revenue and upcoming appointments at a glance." },
-      { property: "og:title", content: "Dashboard — Medicab" },
-      { property: "og:description", content: "Your clinic day, unified." },
+      { title: "Tableau de bord — Medicab" },
+      { name: "description", content: "L'activité, les revenus et les rendez-vous du jour en un coup d'œil." },
+      { property: "og:title", content: "Tableau de bord — Medicab" },
+      { property: "og:description", content: "Votre journée clinique unifiée." },
     ],
   }),
   component: DashboardPage,
 });
-
-const stats = [
-  { label: "Today's Appointments", value: "24", delta: "+3", icon: CalendarClock, tone: "primary" as const },
-  { label: "Patients Waiting", value: "5", delta: "live", icon: Armchair, tone: "warning" as const },
-  { label: "Present Today", value: "18", delta: "+2", icon: Users, tone: "success" as const },
-  { label: "Absent Today", value: "2", delta: "-1", icon: UserX, tone: "destructive" as const },
-  { label: "Revenue Today", value: "4,850 MAD", delta: "+12%", icon: Wallet, tone: "primary" as const },
-  { label: "Revenue This Month", value: "128,400 MAD", delta: "+18%", icon: TrendingUp, tone: "success" as const },
-];
 
 const toneMap: Record<string, string> = {
   primary: "bg-primary-soft text-accent-foreground",
@@ -42,6 +34,15 @@ const toneMap: Record<string, string> = {
 };
 
 function DashboardPage() {
+  const t = useT();
+  const stats = [
+    { label: t("dash.todaysAppointments"), value: "24", delta: "+3", icon: CalendarClock, tone: "primary" as const },
+    { label: t("dash.patientsWaiting"), value: "5", delta: t("dash.live"), icon: Armchair, tone: "warning" as const },
+    { label: t("dash.presentToday"), value: "18", delta: "+2", icon: Users, tone: "success" as const },
+    { label: t("dash.absentToday"), value: "2", delta: "-1", icon: UserX, tone: "destructive" as const },
+    { label: t("dash.revenueToday"), value: "4,850 MAD", delta: "+12%", icon: Wallet, tone: "primary" as const },
+    { label: t("dash.revenueMonth"), value: "128,400 MAD", delta: "+18%", icon: TrendingUp, tone: "success" as const },
+  ];
   const upcoming = appointments
     .filter((a) => new Date(a.date) > new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -49,12 +50,12 @@ function DashboardPage() {
 
   return (
     <AppShell
-      title="Good morning, Kaoutar"
-      subtitle="Here's what's happening in your clinic today."
+      title={t("dash.greeting")}
+      subtitle={t("dash.subtitle")}
       actions={
         <>
-          <Button variant="outline" className="rounded-lg">Export</Button>
-          <Button asChild className="rounded-lg"><Link to="/appointments">New appointment</Link></Button>
+          <Button variant="outline" className="rounded-lg">{t("dash.export")}</Button>
+          <Button asChild className="rounded-lg"><Link to="/appointments">{t("dash.newAppointment")}</Link></Button>
         </>
       }
     >
@@ -80,10 +81,10 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Monthly revenue</div>
-                <div className="text-xs text-muted-foreground">Last 7 months · MAD</div>
+                <div className="text-sm font-semibold">{t("dash.monthlyRevenue")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.last7")}</div>
               </div>
-              <Button variant="ghost" size="sm" className="text-xs">View report <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></Button>
+              <Button variant="ghost" size="sm" className="text-xs">{t("dash.viewReport")} <ArrowUpRight className="ms-1 h-3.5 w-3.5 rtl:rotate-180" /></Button>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -109,8 +110,8 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Attendance rate</div>
-                <div className="text-xs text-muted-foreground">Present vs absent</div>
+                <div className="text-sm font-semibold">{t("dash.attendance")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.presentVsAbsent")}</div>
               </div>
               <span className="rounded-full bg-[oklch(0.94_0.06_155)] px-2 py-0.5 text-[11px] font-medium text-[oklch(0.35_0.12_155)]">93%</span>
             </div>
@@ -135,8 +136,8 @@ function DashboardPage() {
           <CardContent className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Appointments per month</div>
-                <div className="text-xs text-muted-foreground">Volume trend</div>
+                <div className="text-sm font-semibold">{t("dash.appointmentsPerMonth")}</div>
+                <div className="text-xs text-muted-foreground">{t("dash.volumeTrend")}</div>
               </div>
             </div>
             <div className="h-52">
@@ -156,8 +157,8 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Today's notifications</div>
-              <Link to="/notifications" className="text-xs font-medium text-primary hover:underline">View all</Link>
+              <div className="text-sm font-semibold">{t("dash.todaysNotifications")}</div>
+              <Link to="/notifications" className="text-xs font-medium text-primary hover:underline">{t("dash.viewAll")}</Link>
             </div>
             <ul className="space-y-3">
               {notifications.slice(0, 4).map((n) => (
@@ -183,8 +184,8 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm lg:col-span-2">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Upcoming appointments</div>
-              <Link to="/appointments" className="text-xs font-medium text-primary hover:underline">See all</Link>
+              <div className="text-sm font-semibold">{t("dash.upcoming")}</div>
+              <Link to="/appointments" className="text-xs font-medium text-primary hover:underline">{t("dash.seeAll")}</Link>
             </div>
             <div className="divide-y">
               {upcoming.map((a) => (
@@ -208,7 +209,7 @@ function DashboardPage() {
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-semibold">Recent activity</div>
+              <div className="text-sm font-semibold">{t("dash.recentActivity")}</div>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </div>
             <ol className="space-y-4">
