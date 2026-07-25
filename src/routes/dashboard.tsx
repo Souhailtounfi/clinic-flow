@@ -12,27 +12,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { appointments, notifications, revenueByMonth, attendanceByMonth } from "@/lib/mock-data";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Medicab" },
-      { name: "description", content: "Today's clinic activity, revenue and upcoming appointments at a glance." },
-      { property: "og:title", content: "Dashboard — Medicab" },
-      { property: "og:description", content: "Your clinic day, unified." },
+      { title: "Tableau de bord — Medicab" },
+      { name: "description", content: "L'activité, les revenus et les rendez-vous du jour en un coup d'œil." },
+      { property: "og:title", content: "Tableau de bord — Medicab" },
+      { property: "og:description", content: "Votre journée clinique unifiée." },
     ],
   }),
   component: DashboardPage,
 });
-
-const stats = [
-  { label: "Today's Appointments", value: "24", delta: "+3", icon: CalendarClock, tone: "primary" as const },
-  { label: "Patients Waiting", value: "5", delta: "live", icon: Armchair, tone: "warning" as const },
-  { label: "Present Today", value: "18", delta: "+2", icon: Users, tone: "success" as const },
-  { label: "Absent Today", value: "2", delta: "-1", icon: UserX, tone: "destructive" as const },
-  { label: "Revenue Today", value: "4,850 MAD", delta: "+12%", icon: Wallet, tone: "primary" as const },
-  { label: "Revenue This Month", value: "128,400 MAD", delta: "+18%", icon: TrendingUp, tone: "success" as const },
-];
 
 const toneMap: Record<string, string> = {
   primary: "bg-primary-soft text-accent-foreground",
@@ -42,6 +34,15 @@ const toneMap: Record<string, string> = {
 };
 
 function DashboardPage() {
+  const t = useT();
+  const stats = [
+    { label: t("dash.todaysAppointments"), value: "24", delta: "+3", icon: CalendarClock, tone: "primary" as const },
+    { label: t("dash.patientsWaiting"), value: "5", delta: t("dash.live"), icon: Armchair, tone: "warning" as const },
+    { label: t("dash.presentToday"), value: "18", delta: "+2", icon: Users, tone: "success" as const },
+    { label: t("dash.absentToday"), value: "2", delta: "-1", icon: UserX, tone: "destructive" as const },
+    { label: t("dash.revenueToday"), value: "4,850 MAD", delta: "+12%", icon: Wallet, tone: "primary" as const },
+    { label: t("dash.revenueMonth"), value: "128,400 MAD", delta: "+18%", icon: TrendingUp, tone: "success" as const },
+  ];
   const upcoming = appointments
     .filter((a) => new Date(a.date) > new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -49,12 +50,12 @@ function DashboardPage() {
 
   return (
     <AppShell
-      title="Good morning, Kaoutar"
-      subtitle="Here's what's happening in your clinic today."
+      title={t("dash.greeting")}
+      subtitle={t("dash.subtitle")}
       actions={
         <>
-          <Button variant="outline" className="rounded-lg">Export</Button>
-          <Button asChild className="rounded-lg"><Link to="/appointments">New appointment</Link></Button>
+          <Button variant="outline" className="rounded-lg">{t("dash.export")}</Button>
+          <Button asChild className="rounded-lg"><Link to="/appointments">{t("dash.newAppointment")}</Link></Button>
         </>
       }
     >
