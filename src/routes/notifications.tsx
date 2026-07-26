@@ -8,12 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { notifications } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/notifications")({
   head: () => ({
     meta: [
       { title: "Notifications — Clinicab" },
-      { name: "description", content: "Reminders and clinic activity notifications." },
+      { name: "description", content: "Rappels et notifications d'activité du cabinet." },
     ],
   }),
   component: NotificationsPage,
@@ -22,20 +23,21 @@ export const Route = createFileRoute("/notifications")({
 const kindIcon: Record<string, any> = { appointment: CalendarClock, payment: Wallet, system: Settings };
 
 function NotificationsPage() {
+  const { t } = useI18n();
   const [items, setItems] = useState(notifications);
   const unread = items.filter((n) => !n.read).length;
 
   return (
     <AppShell
-      title="Notifications"
-      subtitle={`${unread} unread`}
-      actions={<Button variant="outline" onClick={() => { setItems(items.map((n) => ({ ...n, read: true }))); toast.success("All marked read"); }}><Check className="mr-2 h-4 w-4" /> Mark all read</Button>}
+      title={t("notif.title")}
+      subtitle={t("notif.unread", { n: unread })}
+      actions={<Button variant="outline" onClick={() => { setItems(items.map((n) => ({ ...n, read: true }))); toast.success(t("notif.markedAll")); }}><Check className="mr-2 h-4 w-4" /> {t("notif.markAll")}</Button>}
     >
       <Tabs defaultValue="all">
         <TabsList className="rounded-xl bg-secondary/60">
-          <TabsTrigger value="all" className="rounded-lg">All</TabsTrigger>
-          <TabsTrigger value="unread" className="rounded-lg">Unread</TabsTrigger>
-          <TabsTrigger value="today" className="rounded-lg">Today</TabsTrigger>
+          <TabsTrigger value="all" className="rounded-lg">{t("notif.tab.all")}</TabsTrigger>
+          <TabsTrigger value="unread" className="rounded-lg">{t("notif.tab.unread")}</TabsTrigger>
+          <TabsTrigger value="today" className="rounded-lg">{t("notif.tab.today")}</TabsTrigger>
         </TabsList>
         {(["all", "unread", "today"] as const).map((tab) => (
           <TabsContent key={tab} value={tab}>

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { patients, consultations, prescriptions, payments, appointments } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/patients/$id")({
   loader: ({ params }) => {
@@ -17,19 +18,26 @@ export const Route = createFileRoute("/patients/$id")({
   head: ({ loaderData }) => ({
     meta: [
       { title: loaderData ? `${loaderData.patient.firstName} ${loaderData.patient.lastName} — Clinicab` : "Patient — Clinicab" },
-      { name: "description", content: "Full patient profile: history, consultations, prescriptions and payments." },
+      { name: "description", content: "Profil patient complet : historique, consultations, ordonnances et paiements." },
     ],
   }),
   component: PatientProfile,
-  notFoundComponent: () => (
-    <AppShell title="Patient not found">
-      <Link to="/patients" className="text-sm text-primary">← Back to patients</Link>
-    </AppShell>
-  ),
+  notFoundComponent: NotFoundView,
 });
+
+function NotFoundView() {
+  const { t } = useI18n();
+  return (
+    <AppShell title={t("prof.notFound")}>
+      <Link to="/patients" className="text-sm text-primary">{t("prof.back")}</Link>
+    </AppShell>
+  );
+}
 
 function PatientProfile() {
   const { patient } = Route.useLoaderData();
+  const { t, lang } = useI18n();
+  const localeTag = lang === "fr" ? "fr-FR" : lang === "ar" ? "ar-MA" : "en-GB";
   const pConsults = consultations.filter((c) => c.patientId === patient.id).slice(0, 6);
   const pRx = prescriptions.filter((c) => c.patientId === patient.id).slice(0, 6);
   const pPayments = payments.filter((c) => c.patientId === patient.id).slice(0, 6);
@@ -38,11 +46,11 @@ function PatientProfile() {
   return (
     <AppShell
       title={`${patient.firstName} ${patient.lastName}`}
-      subtitle={`${patient.id} · ${patient.age} y/o · ${patient.gender === "F" ? "Female" : "Male"}`}
+      subtitle={`${patient.id} · ${patient.age} · ${patient.gender === "F" ? t("common.female") : t("common.male")}`}
       actions={
         <>
-          <Button variant="outline" asChild className="rounded-lg"><Link to="/patients"><ArrowLeft className="mr-2 h-4 w-4" /> All patients</Link></Button>
-          <Button className="rounded-lg"><Pencil className="mr-2 h-4 w-4" /> Edit profile</Button>
+          <Button variant="outline" asChild className="rounded-lg"><Link to="/patients"><ArrowLeft className="mr-2 h-4 w-4" /> {t("prof.allPatients")}</Link></Button>
+          <Button className="rounded-lg"><Pencil className="mr-2 h-4 w-4" /> {t("prof.editProfile")}</Button>
         </>
       }
     >
@@ -53,21 +61,21 @@ function PatientProfile() {
               <Avatar className="h-14 w-14"><AvatarFallback className="bg-primary-soft text-accent-foreground text-lg font-semibold">{patient.firstName[0]}{patient.lastName[0]}</AvatarFallback></Avatar>
               <div className="min-w-0">
                 <div className="truncate text-base font-bold">{patient.firstName} {patient.lastName}</div>
-                <div className="text-xs text-muted-foreground">Patient since {patient.lastVisit.slice(0, 4)}</div>
+                <div className="text-xs text-muted-foreground">{t("prof.since")} {patient.lastVisit.slice(0, 4)}</div>
                 <div className="mt-1"><StatusBadge status={patient.status} /></div>
               </div>
             </div>
             <div className="mt-5 space-y-3 text-sm">
-              <InfoRow icon={Phone} label="Phone" value={patient.phone} />
-              <InfoRow icon={Mail} label="Email" value={patient.email} />
-              <InfoRow icon={MapPin} label="Address" value={patient.address} />
-              <InfoRow icon={Cake} label="Birth date" value={patient.birthDate} />
-              <InfoRow icon={Droplet} label="Blood type" value={patient.bloodType} />
+              <InfoRow icon={Phone} label={t("common.phone")} value={patient.phone} />
+              <InfoRow icon={Mail} label={t("common.email")} value={patient.email} />
+              <InfoRow icon={MapPin} label={t("common.address")} value={patient.address} />
+              <InfoRow icon={Cake} label={t("prof.birthDate")} value={patient.birthDate} />
+              <InfoRow icon={Droplet} label={t("prof.bloodType")} value={patient.bloodType} />
             </div>
             {patient.outstandingMAD > 0 && (
               <div className="mt-5 rounded-xl border border-[oklch(0.9_0.06_27)] bg-[oklch(0.98_0.02_27)] p-3 text-xs">
-                <div className="flex items-center gap-2 font-semibold text-[oklch(0.45_0.18_27)]"><Wallet className="h-4 w-4" /> Outstanding balance</div>
-                <div className="mt-0.5 text-muted-foreground">{patient.outstandingMAD} MAD unpaid</div>
+                <div className="flex items-center gap-2 font-semibold text-[oklch(0.45_0.18_27)]"><Wallet className="h-4 w-4" /> {t("prof.outstanding")}</div>
+                <div className="mt-0.5 text-muted-foreground">{patient.outstandingMAD} {t("prof.unpaidSuffix")}</div>
               </div>
             )}
           </CardContent>
@@ -76,27 +84,27 @@ function PatientProfile() {
         <Card className="rounded-2xl border-border/60 shadow-sm lg:col-span-2">
           <CardContent className="p-5">
             <div className="grid gap-3 sm:grid-cols-3">
-              <MiniStat label="Total visits" value={patient.totalVisits.toString()} />
-              <MiniStat label="Last visit" value={patient.lastVisit} />
-              <MiniStat label="Outstanding" value={`${patient.outstandingMAD} MAD`} />
+              <MiniStat label={t("prof.totalVisits")} value={patient.totalVisits.toString()} />
+              <MiniStat label={t("pat.lastVisit")} value={patient.lastVisit} />
+              <MiniStat label={t("prof.outstanding")} value={`${patient.outstandingMAD} MAD`} />
             </div>
             <div className="mt-5">
-              <div className="text-sm font-semibold">Medical history</div>
+              <div className="text-sm font-semibold">{t("prof.medicalHistory")}</div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {patient.medicalHistory.length === 0 ? <span className="text-xs text-muted-foreground">No known conditions.</span>
+                {patient.medicalHistory.length === 0 ? <span className="text-xs text-muted-foreground">{t("prof.noConditions")}</span>
                   : patient.medicalHistory.map((c: string) => <Badge key={c} variant="secondary" className="rounded-full">{c}</Badge>)}
               </div>
             </div>
             <div className="mt-5">
-              <div className="text-sm font-semibold">Allergies</div>
+              <div className="text-sm font-semibold">{t("prof.allergies")}</div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {patient.allergies.length === 0 ? <span className="text-xs text-muted-foreground">None recorded.</span>
+                {patient.allergies.length === 0 ? <span className="text-xs text-muted-foreground">{t("prof.noAllergies")}</span>
                   : patient.allergies.map((c: string) => <Badge key={c} className="rounded-full bg-[oklch(0.95_0.05_27)] text-[oklch(0.45_0.18_27)] hover:bg-[oklch(0.95_0.05_27)]">{c}</Badge>)}
               </div>
             </div>
             <div className="mt-5">
-              <div className="text-sm font-semibold">Notes</div>
-              <p className="mt-1 text-sm text-muted-foreground">{patient.notes || "No additional notes."}</p>
+              <div className="text-sm font-semibold">{t("prof.notes")}</div>
+              <p className="mt-1 text-sm text-muted-foreground">{patient.notes || t("prof.noNotes")}</p>
             </div>
           </CardContent>
         </Card>
@@ -104,11 +112,11 @@ function PatientProfile() {
 
       <Tabs defaultValue="timeline" className="mt-6">
         <TabsList className="rounded-xl bg-secondary/60">
-          <TabsTrigger value="timeline" className="rounded-lg">Timeline</TabsTrigger>
-          <TabsTrigger value="consultations" className="rounded-lg">Consultations</TabsTrigger>
-          <TabsTrigger value="prescriptions" className="rounded-lg">Prescriptions</TabsTrigger>
-          <TabsTrigger value="payments" className="rounded-lg">Payments</TabsTrigger>
-          <TabsTrigger value="attachments" className="rounded-lg">Attachments</TabsTrigger>
+          <TabsTrigger value="timeline" className="rounded-lg">{t("prof.tab.timeline")}</TabsTrigger>
+          <TabsTrigger value="consultations" className="rounded-lg">{t("prof.tab.consultations")}</TabsTrigger>
+          <TabsTrigger value="prescriptions" className="rounded-lg">{t("prof.tab.prescriptions")}</TabsTrigger>
+          <TabsTrigger value="payments" className="rounded-lg">{t("prof.tab.payments")}</TabsTrigger>
+          <TabsTrigger value="attachments" className="rounded-lg">{t("prof.tab.attachments")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="timeline">
@@ -121,7 +129,7 @@ function PatientProfile() {
                     <div className="text-sm font-medium">{a.reason}</div>
                     <StatusBadge status={a.status} />
                   </div>
-                  <div className="text-xs text-muted-foreground">{new Date(a.date).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })} · {a.doctorName}</div>
+                  <div className="text-xs text-muted-foreground">{new Date(a.date).toLocaleString(localeTag, { dateStyle: "medium", timeStyle: "short" })} · {a.doctorName}</div>
                 </li>
               ))}
             </ol>
@@ -130,7 +138,7 @@ function PatientProfile() {
 
         <TabsContent value="consultations">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5 space-y-3">
-            {pConsults.length === 0 ? <EmptyState label="No consultations yet." /> : pConsults.map((c) => (
+            {pConsults.length === 0 ? <EmptyState label={t("prof.noConsults")} /> : pConsults.map((c) => (
               <div key={c.id} className="rounded-xl border p-3">
                 <div className="flex items-center justify-between text-sm"><span className="font-semibold">{c.diagnosis}</span><span className="text-xs text-muted-foreground">{c.date}</span></div>
                 <p className="mt-1 text-xs text-muted-foreground">{c.notes} — {c.doctor}</p>
@@ -141,7 +149,7 @@ function PatientProfile() {
 
         <TabsContent value="prescriptions">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5 space-y-3">
-            {pRx.length === 0 ? <EmptyState label="No prescriptions yet." /> : pRx.map((r) => (
+            {pRx.length === 0 ? <EmptyState label={t("prof.noRx")} /> : pRx.map((r) => (
               <div key={r.id} className="rounded-xl border p-3">
                 <div className="flex items-center justify-between text-sm"><span className="font-semibold flex items-center gap-2"><FileText className="h-4 w-4 text-primary" /> {r.id}</span><span className="text-xs text-muted-foreground">{r.date}</span></div>
                 <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
@@ -154,7 +162,7 @@ function PatientProfile() {
 
         <TabsContent value="payments">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5 space-y-2">
-            {pPayments.length === 0 ? <EmptyState label="No payment history." /> : pPayments.map((p) => (
+            {pPayments.length === 0 ? <EmptyState label={t("prof.noPayments")} /> : pPayments.map((p) => (
               <div key={p.id} className="flex items-center justify-between rounded-xl border p-3 text-sm">
                 <div><div className="font-medium">{p.amount} MAD</div><div className="text-xs text-muted-foreground">{p.date} · {p.method}</div></div>
                 <StatusBadge status={p.status} />
@@ -165,7 +173,7 @@ function PatientProfile() {
 
         <TabsContent value="attachments">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-            <EmptyState icon={Paperclip} label="No files uploaded yet." action="Upload file" />
+            <EmptyState icon={Paperclip} label={t("prof.noFiles")} action={t("prof.uploadFile")} />
           </CardContent></Card>
         </TabsContent>
       </Tabs>

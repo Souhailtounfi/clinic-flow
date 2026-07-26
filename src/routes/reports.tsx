@@ -8,49 +8,51 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { revenueByMonth, attendanceByMonth, patients } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — Clinicab" },
-      { name: "description", content: "Revenue, appointments, attendance and patient reports." },
+      { title: "Rapports — Clinicab" },
+      { name: "description", content: "Revenus, rendez-vous, présence et rapports patients." },
     ],
   }),
   component: ReportsPage,
 });
 
 function ReportsPage() {
+  const { t } = useI18n();
   const topPatients = [...patients].sort((a, b) => b.totalVisits - a.totalVisits).slice(0, 8);
   const pie = [
-    { name: "Present", value: 88, color: "oklch(0.68 0.16 155)" },
-    { name: "Absent", value: 7, color: "oklch(0.6 0.22 27)" },
-    { name: "Cancelled", value: 5, color: "oklch(0.78 0.15 75)" },
+    { name: t("status.present"), value: 88, color: "oklch(0.68 0.16 155)" },
+    { name: t("status.absent"), value: 7, color: "oklch(0.6 0.22 27)" },
+    { name: t("status.cancelled"), value: 5, color: "oklch(0.78 0.15 75)" },
   ];
 
   return (
     <AppShell
-      title="Reports"
-      subtitle="Insights across your clinic"
-      actions={<Button variant="outline" className="rounded-lg" onClick={() => toast.success("Export ready")}><Download className="mr-2 h-4 w-4" /> Export CSV</Button>}
+      title={t("rep.title")}
+      subtitle={t("rep.subtitle")}
+      actions={<Button variant="outline" className="rounded-lg" onClick={() => toast.success(t("rep.exportReady"))}><Download className="mr-2 h-4 w-4" /> {t("common.exportCSV")}</Button>}
     >
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <ReportStat icon={TrendingUp} label="Revenue MTD" value="128,400 MAD" delta="+18%" />
-        <ReportStat icon={CalendarClock} label="Appointments MTD" value="312" delta="+9%" />
-        <ReportStat icon={Users} label="New patients" value="41" delta="+12%" />
-        <ReportStat icon={UserX} label="Missed" value="18" delta="-3" />
+        <ReportStat icon={TrendingUp} label={t("rep.revenueMTD")} value="128,400 MAD" delta="+18%" />
+        <ReportStat icon={CalendarClock} label={t("rep.aptMTD")} value="312" delta="+9%" />
+        <ReportStat icon={Users} label={t("rep.newPatients")} value="41" delta="+12%" />
+        <ReportStat icon={UserX} label={t("rep.missed")} value="18" delta="-3" />
       </div>
 
       <Tabs defaultValue="revenue" className="mt-6">
         <TabsList className="rounded-xl bg-secondary/60">
-          <TabsTrigger value="revenue" className="rounded-lg">Revenue</TabsTrigger>
-          <TabsTrigger value="appointments" className="rounded-lg">Appointments</TabsTrigger>
-          <TabsTrigger value="attendance" className="rounded-lg">Attendance</TabsTrigger>
-          <TabsTrigger value="patients" className="rounded-lg">Patients</TabsTrigger>
+          <TabsTrigger value="revenue" className="rounded-lg">{t("rep.tab.revenue")}</TabsTrigger>
+          <TabsTrigger value="appointments" className="rounded-lg">{t("rep.tab.appointments")}</TabsTrigger>
+          <TabsTrigger value="attendance" className="rounded-lg">{t("rep.tab.attendance")}</TabsTrigger>
+          <TabsTrigger value="patients" className="rounded-lg">{t("rep.tab.patients")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="revenue">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-            <div className="text-sm font-semibold">Monthly revenue</div>
+            <div className="text-sm font-semibold">{t("rep.monthlyRevenue")}</div>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={revenueByMonth} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
@@ -68,7 +70,7 @@ function ReportsPage() {
 
         <TabsContent value="appointments">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-            <div className="text-sm font-semibold">Appointments per month</div>
+            <div className="text-sm font-semibold">{t("rep.aptPerMonth")}</div>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueByMonth} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
@@ -86,7 +88,7 @@ function ReportsPage() {
         <TabsContent value="attendance">
           <div className="grid gap-4 lg:grid-cols-2">
             <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-              <div className="text-sm font-semibold">Attendance trend</div>
+              <div className="text-sm font-semibold">{t("rep.attendanceTrend")}</div>
               <div className="mt-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={attendanceByMonth} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
@@ -101,7 +103,7 @@ function ReportsPage() {
               </div>
             </CardContent></Card>
             <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-              <div className="text-sm font-semibold">Attendance breakdown</div>
+              <div className="text-sm font-semibold">{t("rep.attendanceBreak")}</div>
               <div className="mt-4 h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -119,11 +121,11 @@ function ReportsPage() {
 
         <TabsContent value="patients">
           <Card className="rounded-2xl border-border/60 shadow-sm"><CardContent className="p-5">
-            <div className="mb-3 text-sm font-semibold">Most frequent patients</div>
+            <div className="mb-3 text-sm font-semibold">{t("rep.topPatients")}</div>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader><TableRow className="bg-secondary/40 hover:bg-secondary/40">
-                  <TableHead>Patient</TableHead><TableHead>City</TableHead><TableHead>Visits</TableHead><TableHead>Last visit</TableHead>
+                  <TableHead>{t("common.patient")}</TableHead><TableHead>{t("common.city")}</TableHead><TableHead>{t("rep.visits")}</TableHead><TableHead>{t("pat.lastVisit")}</TableHead>
                 </TableRow></TableHeader>
                 <TableBody>
                   {topPatients.map((p) => (

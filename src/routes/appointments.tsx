@@ -11,20 +11,23 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { appointments } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/appointments")({
   head: () => ({
     meta: [
-      { title: "Appointments — Clinicab" },
-      { name: "description", content: "Manage all clinic appointments with status, doctor and reason." },
+      { title: "Rendez-vous — Clinicab" },
+      { name: "description", content: "Gérez tous les rendez-vous du cabinet." },
     ],
   }),
   component: AppointmentsPage,
 });
 
 function AppointmentsPage() {
+  const { t, lang } = useI18n();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const localeTag = lang === "fr" ? "fr-FR" : lang === "ar" ? "ar-MA" : "en-GB";
 
   const rows = appointments
     .filter((a) => (status === "all" || a.status === status) && (!q || a.patientName.toLowerCase().includes(q.toLowerCase())))
@@ -32,26 +35,26 @@ function AppointmentsPage() {
 
   return (
     <AppShell
-      title="Appointments"
-      subtitle={`${appointments.length} appointments across all doctors`}
+      title={t("apt.title")}
+      subtitle={t("apt.subtitle", { n: appointments.length })}
       actions={<NewAppointment />}
     >
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-[220px] flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search patient…" value={q} onChange={(e) => setQ(e.target.value)} className="h-10 pl-9" />
+            <Input placeholder={t("apt.searchPh")} value={q} onChange={(e) => setQ(e.target.value)} className="h-10 pl-9" />
           </div>
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="h-10 w-[170px]"><Filter className="mr-2 h-4 w-4" /><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-10 w-[190px]"><Filter className="mr-2 h-4 w-4" /><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="scheduled">Scheduled</SelectItem>
-              <SelectItem value="confirmed">Confirmed</SelectItem>
-              <SelectItem value="present">Present</SelectItem>
-              <SelectItem value="absent">Absent</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-              <SelectItem value="rescheduled">Rescheduled</SelectItem>
+              <SelectItem value="all">{t("common.allStatuses")}</SelectItem>
+              <SelectItem value="scheduled">{t("status.scheduled")}</SelectItem>
+              <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
+              <SelectItem value="present">{t("status.present")}</SelectItem>
+              <SelectItem value="absent">{t("status.absent")}</SelectItem>
+              <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
+              <SelectItem value="rescheduled">{t("status.rescheduled")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -62,12 +65,12 @@ function AppointmentsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/40 hover:bg-secondary/40">
-                <TableHead>Patient</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="hidden md:table-cell">Reason</TableHead>
-                <TableHead className="hidden lg:table-cell">Doctor</TableHead>
-                <TableHead className="hidden lg:table-cell">Room</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("common.patient")}</TableHead>
+                <TableHead>{t("common.date")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("common.reason")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("common.doctor")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("common.room")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -75,8 +78,8 @@ function AppointmentsPage() {
                 <TableRow key={a.id} className="hover:bg-secondary/30">
                   <TableCell className="font-medium">{a.patientName}</TableCell>
                   <TableCell className="text-sm">
-                    <div>{new Date(a.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}</div>
-                    <div className="text-[11px] text-muted-foreground">{new Date(a.date).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</div>
+                    <div>{new Date(a.date).toLocaleDateString(localeTag, { day: "2-digit", month: "short" })}</div>
+                    <div className="text-[11px] text-muted-foreground">{new Date(a.date).toLocaleTimeString(localeTag, { hour: "2-digit", minute: "2-digit" })}</div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell text-sm">{a.reason}</TableCell>
                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{a.doctorName}</TableCell>
@@ -93,24 +96,25 @@ function AppointmentsPage() {
 }
 
 function NewAppointment() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button className="rounded-lg"><Plus className="mr-2 h-4 w-4" /> New appointment</Button></DialogTrigger>
+      <DialogTrigger asChild><Button className="rounded-lg"><Plus className="mr-2 h-4 w-4" /> {t("apt.new")}</Button></DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New appointment</DialogTitle>
-          <DialogDescription>Schedule a visit for a patient.</DialogDescription>
+          <DialogTitle>{t("apt.new")}</DialogTitle>
+          <DialogDescription>{t("apt.newDesc")}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5 sm:col-span-2"><Label>Patient</Label><Input placeholder="Search or select patient" /></div>
-          <div className="space-y-1.5"><Label>Date</Label><Input type="date" /></div>
-          <div className="space-y-1.5"><Label>Time</Label><Input type="time" /></div>
-          <div className="space-y-1.5 sm:col-span-2"><Label>Reason</Label><Input placeholder="Consultation, follow-up…" /></div>
+          <div className="space-y-1.5 sm:col-span-2"><Label>{t("common.patient")}</Label><Input placeholder={t("apt.searchOrSelect")} /></div>
+          <div className="space-y-1.5"><Label>{t("common.date")}</Label><Input type="date" /></div>
+          <div className="space-y-1.5"><Label>{t("common.time")}</Label><Input type="time" /></div>
+          <div className="space-y-1.5 sm:col-span-2"><Label>{t("common.reason")}</Label><Input placeholder={t("apt.reasonPh")} /></div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={() => { setOpen(false); toast.success("Appointment scheduled"); }}>Schedule</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{t("common.cancel")}</Button>
+          <Button onClick={() => { setOpen(false); toast.success(t("apt.scheduled")); }}>{t("apt.schedule")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

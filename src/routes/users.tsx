@@ -13,26 +13,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { staff } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/users")({
   head: () => ({
     meta: [
-      { title: "Users — Clinicab" },
-      { name: "description", content: "Doctors, secretaries and role-based access." },
+      { title: "Utilisateurs — Clinicab" },
+      { name: "description", content: "Médecins, secrétaires et accès par rôle." },
     ],
   }),
   component: UsersPage,
 });
 
 function UsersPage() {
+  const { t } = useI18n();
   const [q, setQ] = useState("");
   const rows = staff.filter((u) => !q || `${u.name} ${u.email}`.toLowerCase().includes(q.toLowerCase()));
   return (
-    <AppShell title="Users & roles" subtitle="Doctors, secretaries and permissions" actions={<NewUser />}>
+    <AppShell title={t("usr.title")} subtitle={t("usr.subtitle")} actions={<NewUser />}>
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">
         <div className="relative max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search team members…" value={q} onChange={(e) => setQ(e.target.value)} className="h-10 pl-9" />
+          <Input placeholder={t("usr.searchPh")} value={q} onChange={(e) => setQ(e.target.value)} className="h-10 pl-9" />
         </div>
       </Card>
       <Card className="mt-4 overflow-hidden rounded-2xl border-border/60 shadow-sm">
@@ -40,12 +42,12 @@ function UsersPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/40 hover:bg-secondary/40">
-                <TableHead>User</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="hidden md:table-cell">Specialty</TableHead>
-                <TableHead className="hidden lg:table-cell">Last active</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("usr.fullName")}</TableHead>
+                <TableHead>{t("usr.role")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("usr.specialty")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("usr.lastActive")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead className="text-right">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -60,10 +62,10 @@ function UsersPage() {
                   <TableCell><Badge variant="secondary" className="rounded-full">{u.role}</Badge></TableCell>
                   <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{u.specialty ?? "—"}</TableCell>
                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{u.lastActive}</TableCell>
-                  <TableCell>{u.active ? <Badge className="rounded-full bg-[oklch(0.94_0.06_155)] text-[oklch(0.35_0.12_155)] hover:bg-[oklch(0.94_0.06_155)]">Active</Badge> : <Badge variant="secondary" className="rounded-full">Inactive</Badge>}</TableCell>
+                  <TableCell>{u.active ? <Badge className="rounded-full bg-[oklch(0.94_0.06_155)] text-[oklch(0.35_0.12_155)] hover:bg-[oklch(0.94_0.06_155)]">{t("status.active")}</Badge> : <Badge variant="secondary" className="rounded-full">{t("status.inactive")}</Badge>}</TableCell>
                   <TableCell className="text-right">
-                    <Button size="sm" variant="ghost" onClick={() => toast.success("Reset link sent")}><KeyRound className="mr-1.5 h-4 w-4" /> Reset</Button>
-                    <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => toast("User deactivated")}><Ban className="mr-1.5 h-4 w-4" /> Deactivate</Button>
+                    <Button size="sm" variant="ghost" onClick={() => toast.success(t("usr.resetSent"))}><KeyRound className="mr-1.5 h-4 w-4" /> {t("usr.reset")}</Button>
+                    <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => toast(t("usr.deactivated"))}><Ban className="mr-1.5 h-4 w-4" /> {t("usr.deactivate")}</Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -76,16 +78,17 @@ function UsersPage() {
 }
 
 function NewUser() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button className="rounded-lg"><UserPlus className="mr-2 h-4 w-4" /> Create user</Button></DialogTrigger>
+      <DialogTrigger asChild><Button className="rounded-lg"><UserPlus className="mr-2 h-4 w-4" /> {t("usr.create")}</Button></DialogTrigger>
       <DialogContent className="sm:max-w-lg">
-        <DialogHeader><DialogTitle>Create user</DialogTitle><DialogDescription>Add a doctor or secretary to your clinic.</DialogDescription></DialogHeader>
+        <DialogHeader><DialogTitle>{t("usr.create")}</DialogTitle><DialogDescription>{t("usr.createDesc")}</DialogDescription></DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5"><Label>Full name</Label><Input placeholder="Dr. Fatima Naciri" /></div>
-          <div className="space-y-1.5"><Label>Email</Label><Input placeholder="user@clinicab.ma" /></div>
-          <div className="space-y-1.5"><Label>Role</Label>
+          <div className="space-y-1.5"><Label>{t("usr.fullName")}</Label><Input placeholder="Dr. Fatima Naciri" /></div>
+          <div className="space-y-1.5"><Label>{t("common.email")}</Label><Input placeholder="user@clinicab.ma" /></div>
+          <div className="space-y-1.5"><Label>{t("usr.role")}</Label>
             <Select defaultValue="Doctor"><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Doctor">Doctor</SelectItem>
@@ -93,9 +96,9 @@ function NewUser() {
                 <SelectItem value="Super Admin">Super Admin</SelectItem>
               </SelectContent></Select>
           </div>
-          <div className="space-y-1.5"><Label>Specialty</Label><Input placeholder="Dermatology" /></div>
+          <div className="space-y-1.5"><Label>{t("usr.specialty")}</Label><Input placeholder="Dermatology" /></div>
         </div>
-        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={() => { setOpen(false); toast.success("Invite sent"); }}>Send invite</Button></DialogFooter>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>{t("common.cancel")}</Button><Button onClick={() => { setOpen(false); toast.success(t("usr.inviteSent")); }}>{t("usr.sendInvite")}</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   );
