@@ -16,7 +16,7 @@ export const Route = createFileRoute("/patients/$id")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.patient.firstName} ${loaderData.patient.lastName} — Medicab` : "Patient — Medicab" },
+      { title: loaderData ? `${loaderData.patient.firstName} ${loaderData.patient.lastName} — Clinicab` : "Patient — Clinicab" },
       { name: "description", content: "Full patient profile: history, consultations, prescriptions and payments." },
     ],
   }),

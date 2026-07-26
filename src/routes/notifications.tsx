@@ -12,7 +12,7 @@ import { notifications } from "@/lib/mock-data";
 export const Route = createFileRoute("/notifications")({
   head: () => ({
     meta: [
-      { title: "Notifications — Medicab" },
+      { title: "Notifications — Clinicab" },
       { name: "description", content: "Reminders and clinic activity notifications." },
     ],
   }),

@@ -13,7 +13,7 @@ import { payments } from "@/lib/mock-data";
 export const Route = createFileRoute("/payments")({
   head: () => ({
     meta: [
-      { title: "Payments — Medicab" },
+      { title: "Payments — Clinicab" },
       { name: "description", content: "Track cash payments, outstanding balances and revenue." },
     ],
   }),

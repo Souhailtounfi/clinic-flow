@@ -13,7 +13,7 @@ import { medicineDb, favoriteMedicines, patients, prescriptions } from "@/lib/mo
 export const Route = createFileRoute("/prescriptions")({
   head: () => ({
     meta: [
-      { title: "Prescriptions — Medicab" },
+      { title: "Prescriptions — Clinicab" },
       { name: "description", content: "Beautiful prescription editor with medicine search and PDF export." },
     ],
   }),

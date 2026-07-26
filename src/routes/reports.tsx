@@ -12,7 +12,7 @@ import { revenueByMonth, attendanceByMonth, patients } from "@/lib/mock-data";
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — Medicab" },
+      { title: "Reports — Clinicab" },
       { name: "description", content: "Revenue, appointments, attendance and patient reports." },
     ],
   }),

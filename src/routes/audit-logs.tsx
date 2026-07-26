@@ -11,7 +11,7 @@ import { auditLogs } from "@/lib/mock-data";
 export const Route = createFileRoute("/audit-logs")({
   head: () => ({
     meta: [
-      { title: "Audit Logs — Medicab" },
+      { title: "Audit Logs — Clinicab" },
       { name: "description", content: "Track every action performed in your clinic workspace." },
     ],
   }),

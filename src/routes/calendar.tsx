@@ -11,7 +11,7 @@ import { appointments } from "@/lib/mock-data";
 export const Route = createFileRoute("/calendar")({
   head: () => ({
     meta: [
-      { title: "Calendar — Medicab" },
+      { title: "Calendar — Clinicab" },
       { name: "description", content: "Day, week and month views of your clinic schedule." },
     ],
   }),

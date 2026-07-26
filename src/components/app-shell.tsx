@@ -47,7 +47,7 @@ function SidebarInner({ pathname, onNavigate }: { pathname: string; onNavigate?:
           <HeartPulse className="h-5 w-5" />
         </div>
         <div className="leading-tight">
-          <div className="text-sm font-bold tracking-tight">Medicab</div>
+          <div className="text-sm font-bold tracking-tight">Clinicab</div>
           <div className="text-[11px] text-muted-foreground">{t("brand.tagline")}</div>
         </div>
       </div>

@@ -12,7 +12,7 @@ import { clinics, revenueByMonth } from "@/lib/mock-data";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Super Admin — Medicab" },
+      { title: "Super Admin — Clinicab" },
       { name: "description", content: "Manage all clinics, subscriptions and platform metrics." },
     ],
   }),

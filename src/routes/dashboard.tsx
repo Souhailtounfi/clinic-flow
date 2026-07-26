@@ -17,9 +17,9 @@ import { useT } from "@/lib/i18n";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Tableau de bord — Medicab" },
+      { title: "Tableau de bord — Clinicab" },
       { name: "description", content: "L'activité, les revenus et les rendez-vous du jour en un coup d'œil." },
-      { property: "og:title", content: "Tableau de bord — Medicab" },
+      { property: "og:title", content: "Tableau de bord — Clinicab" },
       { property: "og:description", content: "Votre journée clinique unifiée." },
     ],
   }),

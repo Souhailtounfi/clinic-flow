@@ -11,7 +11,7 @@ import { waitingRoom } from "@/lib/mock-data";
 export const Route = createFileRoute("/waiting-room")({
   head: () => ({
     meta: [
-      { title: "Waiting Room — Medicab" },
+      { title: "Waiting Room — Clinicab" },
       { name: "description", content: "Live queue of patients waiting for consultation." },
     ],
   }),

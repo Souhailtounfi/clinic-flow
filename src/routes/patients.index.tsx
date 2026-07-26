@@ -17,9 +17,9 @@ import { patients } from "@/lib/mock-data";
 export const Route = createFileRoute("/patients/")({
   head: () => ({
     meta: [
-      { title: "Patients — Medicab" },
+      { title: "Patients — Clinicab" },
       { name: "description", content: "Search, filter and manage your patient records." },
-      { property: "og:title", content: "Patients — Medicab" },
+      { property: "og:title", content: "Patients — Clinicab" },
       { property: "og:description", content: "All patient records in one place." },
     ],
   }),

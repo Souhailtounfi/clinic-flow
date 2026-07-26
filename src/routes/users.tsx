@@ -17,7 +17,7 @@ import { staff } from "@/lib/mock-data";
 export const Route = createFileRoute("/users")({
   head: () => ({
     meta: [
-      { title: "Users — Medicab" },
+      { title: "Users — Clinicab" },
       { name: "description", content: "Doctors, secretaries and role-based access." },
     ],
   }),
@@ -84,7 +84,7 @@ function NewUser() {
         <DialogHeader><DialogTitle>Create user</DialogTitle><DialogDescription>Add a doctor or secretary to your clinic.</DialogDescription></DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5"><Label>Full name</Label><Input placeholder="Dr. Fatima Naciri" /></div>
-          <div className="space-y-1.5"><Label>Email</Label><Input placeholder="user@medicab.ma" /></div>
+          <div className="space-y-1.5"><Label>Email</Label><Input placeholder="user@clinicab.ma" /></div>
           <div className="space-y-1.5"><Label>Role</Label>
             <Select defaultValue="Doctor"><SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>

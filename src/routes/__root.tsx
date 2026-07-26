@@ -79,9 +79,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Medicab — Modern Clinic Management for Morocco" },
+      { title: "Clinicab — Modern Clinic Management for Morocco" },
       { name: "description", content: "Manage patients, appointments, prescriptions and revenue in one premium clinic OS built for Moroccan private practices." },
-      { property: "og:title", content: "Medicab — Modern Clinic Management" },
+      { property: "og:title", content: "Clinicab — Modern Clinic Management" },
       { property: "og:description", content: "Premium clinic management SaaS for dentists, GPs, dermatologists and more." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

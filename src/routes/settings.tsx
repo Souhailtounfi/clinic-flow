@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Clinic Settings — Medicab" },
+      { title: "Clinic Settings — Clinicab" },
       { name: "description", content: "Configure clinic identity, hours and preferences." },
     ],
   }),
