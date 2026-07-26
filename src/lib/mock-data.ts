@@ -265,11 +265,11 @@ export const clinics: Clinic[] = [
 ];
 
 export const staff: StaffUser[] = [
-  { id: "u1", name: "Dr. Kaoutar Idrissi", email: "kaoutar@medicab.ma", role: "Doctor", specialty: "General Practice", active: true, lastActive: "2 min ago" },
-  { id: "u2", name: "Dr. Réda Benali", email: "reda@medicab.ma", role: "Doctor", specialty: "Dermatology", active: true, lastActive: "18 min ago" },
-  { id: "u3", name: "Sara Bennani", email: "sara@medicab.ma", role: "Secretary", active: true, lastActive: "5 min ago" },
-  { id: "u4", name: "Imane Tazi", email: "imane@medicab.ma", role: "Secretary", active: true, lastActive: "1 h ago" },
-  { id: "u5", name: "Admin", email: "admin@medicab.ma", role: "Super Admin", active: true, lastActive: "just now" },
+  { id: "u1", name: "Dr. Kaoutar Idrissi", email: "kaoutar@clinicab.ma", role: "Doctor", specialty: "General Practice", active: true, lastActive: "2 min ago" },
+  { id: "u2", name: "Dr. Réda Benali", email: "reda@clinicab.ma", role: "Doctor", specialty: "Dermatology", active: true, lastActive: "18 min ago" },
+  { id: "u3", name: "Sara Bennani", email: "sara@clinicab.ma", role: "Secretary", active: true, lastActive: "5 min ago" },
+  { id: "u4", name: "Imane Tazi", email: "imane@clinicab.ma", role: "Secretary", active: true, lastActive: "1 h ago" },
+  { id: "u5", name: "Admin", email: "admin@clinicab.ma", role: "Super Admin", active: true, lastActive: "just now" },
 ];
 
 export const revenueByMonth = [

@@ -12,9 +12,9 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Connexion — Medicab" },
-      { name: "description", content: "Connectez-vous à votre espace Medicab." },
-      { property: "og:title", content: "Connexion — Medicab" },
+      { title: "Connexion — Clinicab" },
+      { name: "description", content: "Connectez-vous à votre espace Clinicab." },
+      { property: "og:title", content: "Connexion — Clinicab" },
       { property: "og:description", content: "Accédez à votre système de cabinet marocain." },
     ],
   }),
@@ -47,7 +47,7 @@ function LoginPage() {
               <HeartPulse className="h-5 w-5" />
             </div>
             <div className="leading-tight">
-              <div className="text-base font-bold tracking-tight">Medicab</div>
+              <div className="text-base font-bold tracking-tight">{t("brand.name")}</div>
               <div className="text-[11px] text-muted-foreground">{t("brand.tagline")}</div>
             </div>
           </Link>
@@ -59,7 +59,7 @@ function LoginPage() {
               <Label htmlFor="email">{t("login.email")}</Label>
               <div className="relative">
                 <Mail className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="email" type="email" defaultValue="kaoutar@medicab.ma" className="h-11 ps-9" required />
+                <Input id="email" type="email" defaultValue="kaoutar@clinicab.ma" className="h-11 ps-9" required />
               </div>
             </div>
             <div className="space-y-1.5">

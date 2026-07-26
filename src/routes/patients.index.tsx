@@ -13,20 +13,22 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { patients } from "@/lib/mock-data";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/patients/")({
   head: () => ({
     meta: [
-      { title: "Patients — Medicab" },
-      { name: "description", content: "Search, filter and manage your patient records." },
-      { property: "og:title", content: "Patients — Medicab" },
-      { property: "og:description", content: "All patient records in one place." },
+      { title: "Patients — Clinicab" },
+      { name: "description", content: "Recherchez, filtrez et gérez vos dossiers patients." },
+      { property: "og:title", content: "Patients — Clinicab" },
+      { property: "og:description", content: "Tous les dossiers patients en un seul endroit." },
     ],
   }),
   component: PatientsPage,
 });
 
 function PatientsPage() {
+  const { t } = useI18n();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [city, setCity] = useState<string>("all");
@@ -46,11 +48,11 @@ function PatientsPage() {
 
   return (
     <AppShell
-      title="Patients"
-      subtitle={`${patients.length} patients in your clinic`}
+      title={t("pat.title")}
+      subtitle={t("pat.subtitle", { n: patients.length })}
       actions={
         <>
-          <Button variant="outline" className="rounded-lg"><Download className="mr-2 h-4 w-4" /> Export</Button>
+          <Button variant="outline" className="rounded-lg"><Download className="mr-2 h-4 w-4" /> {t("common.export")}</Button>
           <NewPatientDialog />
         </>
       }
@@ -59,20 +61,20 @@ function PatientsPage() {
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-[220px] flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search by name, phone, email…" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="h-10 pl-9" />
+            <Input placeholder={t("pat.searchPh")} value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} className="h-10 pl-9" />
           </div>
           <Select value={status} onValueChange={(v) => { setStatus(v); setPage(1); }}>
-            <SelectTrigger className="h-10 w-[150px]"><Filter className="mr-2 h-4 w-4" /><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectTrigger className="h-10 w-[170px]"><Filter className="mr-2 h-4 w-4" /><SelectValue placeholder={t("pat.filterStatus")} /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="all">{t("common.allStatuses")}</SelectItem>
+              <SelectItem value="active">{t("status.active")}</SelectItem>
+              <SelectItem value="inactive">{t("status.inactive")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={city} onValueChange={(v) => { setCity(v); setPage(1); }}>
-            <SelectTrigger className="h-10 w-[160px]"><SelectValue placeholder="City" /></SelectTrigger>
+            <SelectTrigger className="h-10 w-[170px]"><SelectValue placeholder={t("pat.filterCity")} /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All cities</SelectItem>
+              <SelectItem value="all">{t("pat.allCities")}</SelectItem>
               {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
@@ -84,18 +86,18 @@ function PatientsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/40 hover:bg-secondary/40">
-                <TableHead>Patient</TableHead>
-                <TableHead className="hidden md:table-cell">Contact</TableHead>
-                <TableHead className="hidden lg:table-cell">City</TableHead>
-                <TableHead className="hidden lg:table-cell">Age</TableHead>
-                <TableHead className="hidden xl:table-cell">Last visit</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("common.patient")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("pat.contact")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("common.city")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("common.age")}</TableHead>
+                <TableHead className="hidden xl:table-cell">{t("pat.lastVisit")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead className="text-right">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {rows.length === 0 && (
-                <TableRow><TableCell colSpan={7} className="py-12 text-center text-sm text-muted-foreground">No patients match your filters.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="py-12 text-center text-sm text-muted-foreground">{t("pat.noMatch")}</TableCell></TableRow>
               )}
               {rows.map((p) => (
                 <TableRow key={p.id} className="hover:bg-secondary/30">
@@ -104,7 +106,7 @@ function PatientsPage() {
                       <Avatar className="h-9 w-9"><AvatarFallback className="bg-primary-soft text-accent-foreground text-xs font-semibold">{p.firstName[0]}{p.lastName[0]}</AvatarFallback></Avatar>
                       <div>
                         <div className="text-sm font-medium">{p.firstName} {p.lastName}</div>
-                        <div className="text-[11px] text-muted-foreground">{p.id} · {p.gender === "F" ? "Female" : "Male"}</div>
+                        <div className="text-[11px] text-muted-foreground">{p.id} · {p.gender === "F" ? t("common.female") : t("common.male")}</div>
                       </div>
                     </Link>
                   </TableCell>
@@ -118,7 +120,7 @@ function PatientsPage() {
                   <TableCell><StatusBadge status={p.status} /></TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button size="icon" variant="ghost" onClick={() => toast("Edit patient · demo only")}><Pencil className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="ghost" onClick={() => toast(t("pat.editDemo"))}><Pencil className="h-4 w-4" /></Button>
                       <DeletePatient name={`${p.firstName} ${p.lastName}`} />
                     </div>
                   </TableCell>
@@ -128,10 +130,10 @@ function PatientsPage() {
           </Table>
         </div>
         <div className="flex items-center justify-between border-t px-4 py-3 text-xs text-muted-foreground">
-          <div>Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} of {filtered.length}</div>
+          <div>{t("common.showing")} {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} {t("common.of")} {filtered.length}</div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
-            <Button size="sm" variant="outline" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>Next</Button>
+            <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>{t("common.previous")}</Button>
+            <Button size="sm" variant="outline" disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}>{t("common.next")}</Button>
           </div>
         </div>
       </Card>
@@ -140,27 +142,28 @@ function PatientsPage() {
 }
 
 function NewPatientDialog() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-lg"><Plus className="mr-2 h-4 w-4" /> New patient</Button>
+        <Button className="rounded-lg"><Plus className="mr-2 h-4 w-4" /> {t("pat.new")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New patient</DialogTitle>
-          <DialogDescription>Add a patient record to your clinic.</DialogDescription>
+          <DialogTitle>{t("pat.new")}</DialogTitle>
+          <DialogDescription>{t("pat.newDesc")}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5"><Label>First name</Label><Input placeholder="Youssef" /></div>
-          <div className="space-y-1.5"><Label>Last name</Label><Input placeholder="El Amrani" /></div>
-          <div className="space-y-1.5"><Label>Phone</Label><Input placeholder="+212 6…" /></div>
-          <div className="space-y-1.5"><Label>Email</Label><Input placeholder="patient@mail.ma" /></div>
-          <div className="space-y-1.5 sm:col-span-2"><Label>Address</Label><Input placeholder="Street, city" /></div>
+          <div className="space-y-1.5"><Label>{t("pat.firstName")}</Label><Input placeholder="Youssef" /></div>
+          <div className="space-y-1.5"><Label>{t("pat.lastName")}</Label><Input placeholder="El Amrani" /></div>
+          <div className="space-y-1.5"><Label>{t("common.phone")}</Label><Input placeholder="+212 6…" /></div>
+          <div className="space-y-1.5"><Label>{t("common.email")}</Label><Input placeholder="patient@mail.ma" /></div>
+          <div className="space-y-1.5 sm:col-span-2"><Label>{t("common.address")}</Label><Input placeholder="Street, city" /></div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={() => { setOpen(false); toast.success("Patient created"); }}>Create patient</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{t("common.cancel")}</Button>
+          <Button onClick={() => { setOpen(false); toast.success(t("pat.created")); }}>{t("pat.createBtn")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -168,6 +171,7 @@ function NewPatientDialog() {
 }
 
 function DeletePatient({ name }: { name: string }) {
+  const { t } = useI18n();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -175,12 +179,12 @@ function DeletePatient({ name }: { name: string }) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {name}?</AlertDialogTitle>
-          <AlertDialogDescription>This will permanently remove the patient and their records. This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogTitle>{t("pat.deleteQ", { n: name })}</AlertDialogTitle>
+          <AlertDialogDescription>{t("pat.deleteDesc")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => toast.success(`${name} deleted`)}>Delete</AlertDialogAction>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+          <AlertDialogAction onClick={() => toast.success(t("pat.deleted", { n: name }))}>{t("common.delete")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
